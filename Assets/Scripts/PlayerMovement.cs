@@ -1,10 +1,16 @@
+using Photon.Pun;
 using UnityEngine;
 
 /// <summary>
 /// 플레이어의 2D 이동을 처리하는 스크립트
 /// </summary>
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : MonoBehaviour // TODO MonoBehaviourPunCallbacks??
 {
+
+    /// <summary>
+    /// PhotonView
+    /// </summary>
+    private PhotonView photonView;
 
     /// <summary>
     /// 플레이어의 물리 이동을 담당하는 Rigidbody2D 컴포넌트
@@ -30,6 +36,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Awake()
     {
+        this.photonView = GetComponent<PhotonView>();
         this.playerBody = GetComponent<Rigidbody2D>();
         this.canMove = true;
     }
@@ -45,7 +52,7 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!this.canMove)
+        if (photonView == null || !photonView.IsMine || !this.canMove)
             return;
 
         // 플레이어 이동 처리
