@@ -1,4 +1,3 @@
-using System.Collections;
 using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
@@ -12,11 +11,13 @@ public class GameManager : MonoBehaviourPunCallbacks
     /// </summary>
     public GameObject playerPrefab;
 
+    /// <summary>
+    /// (UI) 타이머 텍스트
+    /// </summary>
+    public TMP_Text timerText;
+
     public float gameDuration = 180f; // 3분
     private float timeRemaining;
-
-    public TextMeshProUGUI timerText;
-
     private bool gameEnded = false;
 
     void Start()
@@ -74,7 +75,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         int minutes = Mathf.FloorToInt(time / 60f);
         int seconds = Mathf.FloorToInt(time % 60f);
-        //timerText.text = $"{minutes:D2}:{seconds:D2}";
+        timerText.text = $"{minutes:D2}:{seconds:D2}";
     }
 
     void AssignRoles()
