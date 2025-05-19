@@ -34,16 +34,13 @@ MonoBehaviour:
   RunInBackground: 1
   StartInOfflineMode: 0
   RpcList:
-  - SpawnAfterConfirmation
-  - UpdateTimer
   - ClickRpc
   - DestroyRpc
   - DestroySpaceship
+  - UpdateTimer
   - Fire
-  - RequestSpawn
   - RespawnSpaceship
   - ShowEndResult
-  - SyncPlayerObject
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

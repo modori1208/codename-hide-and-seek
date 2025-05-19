@@ -385,12 +385,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40847150e2e7b4852986d7c0f0030fd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hiderPrefab: {fileID: 7606058919849491897, guid: 232193f9d3c824aa2aaa1d1cf63017cb, type: 3}
-  playerObject: {fileID: 0}
+  playerPrefab: {fileID: 7606058919849491897, guid: 232193f9d3c824aa2aaa1d1cf63017cb, type: 3}
   gameDuration: 180
   timerText: {fileID: 0}
-  escapePortal: {fileID: 0}
-  mainCamera: {fileID: 519420033}
 --- !u!4 &929989994
 Transform:
   m_ObjectHideFlags: 0
