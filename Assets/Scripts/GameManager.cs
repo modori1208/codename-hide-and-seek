@@ -1,4 +1,3 @@
-using System.Collections;
 using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
@@ -7,24 +6,50 @@ using UnityEngine;
 public class GameManager : MonoBehaviourPunCallbacks
 {
 
-    public GameObject hiderPrefab;
+    /// <summary>
+    /// 플레이어 프리팹
+    /// </summary>
+    public GameObject playerPrefab;
+
+    /// <summary>
+    /// (UI) 타이머 텍스트
+    /// </summary>
+    public TMP_Text timerText;
 
     public float gameDuration = 180f; // 3분
     private float timeRemaining;
-
-    public TextMeshProUGUI timerText;
-
     private bool gameEnded = false;
 
     void Start()
     {
         this.timeRemaining = this.gameDuration;
 
-        AssignRoles();
+        AssignRoles(); // TODO Remove
 
-        if (photonView.IsMine) // TODO Spawn Logic
+        // PhotonLauncher#OnJoinedRoom() 호출 이후
+        // 씬이 전환되면서 마스터 클라이언트에서만 InRoom 플래그가
+        // 활성화되므로 이후 난입하는 플레이어에겐 실행되지 않음 
+        if (PhotonNetwork.InRoom)
         {
-            GameObject obj = PhotonNetwork.Instantiate(hiderPrefab.name, Vector3.zero, Quaternion.identity);
+            this.SpawnPlayer();
+        }
+    }
+
+    public override void OnJoinedRoom()
+    {
+        // 난입하는 플레이어에 대한 로직 실행
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            this.SpawnPlayer();
+        }
+    }
+
+    // 플레이어 스폰 처리
+    private void SpawnPlayer()
+    {
+        GameObject obj = PhotonNetwork.Instantiate(this.playerPrefab.name, Vector3.zero, Quaternion.identity);
+        if (obj.GetComponent<PhotonView>().IsMine)
+        {
             Camera.main.GetComponent<CameraFollow>().target = obj.transform;
         }
     }
@@ -45,18 +70,12 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
     }
 
-    public override void OnJoinedRoom()
-    {
-        GameObject obj = PhotonNetwork.Instantiate(hiderPrefab.name, Vector3.zero, Quaternion.identity);
-        Camera.main.GetComponent<CameraFollow>().target = obj.transform;
-    }
-
     [PunRPC]
     void UpdateTimer(float time)
     {
         int minutes = Mathf.FloorToInt(time / 60f);
         int seconds = Mathf.FloorToInt(time % 60f);
-        //timerText.text = $"{minutes:D2}:{seconds:D2}";
+        timerText.text = $"{minutes:D2}:{seconds:D2}";
     }
 
     void AssignRoles()
