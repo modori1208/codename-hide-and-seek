@@ -38,8 +38,8 @@ public class WaitPhase : Phase
         int playerCount = PhotonNetwork.PlayerList.Length;
         if (playerCount < 2 || playerCount % 2 != 0)
         {
-            // TODO State enum을 만들어 RPC로 이전하는 것이 좋을까?
-            this.session.photonView.RPC("UpdateActionBar", RpcTarget.All, "플레이어를 기다리는 중...");
+            this.UpdateTimer(GameConstants.WaitTimeBeforeGameStart);
+            this.session.photonView.RPC("UpdateActionBar", RpcTarget.All, "플레이어를 기다리는 중..."); // TODO State enum을 만들어 RPC로 이전하는 것이 좋을까?
             return;
         }
 
