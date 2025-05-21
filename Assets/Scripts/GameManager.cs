@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
@@ -65,7 +64,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     /// </summary>
     /// <param name="newPhase">새 페이즈</param>
     /// <exception cref="System.Exception">동일한 페이즈인 경우 예외가 던져집니다</exception>
-    void ChangePhase(Phase newPhase)
+    public void ChangePhase(Phase newPhase)
     {
         // 마스터 클라이언트가 아닌 경우 무시
         if (!PhotonNetwork.IsMasterClient)

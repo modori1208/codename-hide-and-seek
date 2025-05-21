@@ -54,6 +54,7 @@ public class WaitPhase : Phase
         {
             // TODO 게임 페이즈로 전환
             Debug.Log($"[Phase - Wait] 게임 시작 준비");
+            this.session.ChangePhase(new GamePhase(this.session));
         }
     }
 }
