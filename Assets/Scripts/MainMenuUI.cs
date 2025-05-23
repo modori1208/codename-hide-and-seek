@@ -13,7 +13,7 @@ public class MainMenuUI : MonoBehaviour
 
     public void OnClickCredit()
     {
-        SceneManager.LoadScene("CreditScene");
+        SceneManager.LoadScene("Credit");
     }
 
     public void OnClickQuit()
