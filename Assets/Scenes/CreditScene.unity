@@ -260,8 +260,8 @@ MonoBehaviour:
     Jeong (Dalgona.) <project-neodgm@dalgona.dev>\r\nwith reserved font name \"Neo\uB465\uADFC\uBAA8
     Pro\" and \"NeoDunggeunmo Pro\"."
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: ba0f1a5b48a938449b2ad020bc125d4a, type: 2}
-  m_sharedMaterial: {fileID: 5790952014273091427, guid: ba0f1a5b48a938449b2ad020bc125d4a, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 0e3ab6cb08e3a402d88fe805bb85d1c7, type: 2}
+  m_sharedMaterial: {fileID: 8869713884182402823, guid: 0e3ab6cb08e3a402d88fe805bb85d1c7, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

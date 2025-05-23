@@ -3,9 +3,12 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuUI : MonoBehaviour
 {
+    public PhotonLauncher photonLauncher;
+
     public void OnClickStart()
     {
-        SceneManager.LoadScene("GameScene");  // 씬 이름을 모르겠다..
+        Debug.Log("Start버튼 눌림 - Photon 연결 시도");
+        photonLauncher.StartGameConnection(); // Photon 연결 시작
     }
 
     public void OnClickCredit()

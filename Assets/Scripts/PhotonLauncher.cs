@@ -18,7 +18,7 @@ public class PhotonLauncher : MonoBehaviourPunCallbacks
         PhotonNetwork.AutomaticallySyncScene = true;
     }
 
-    void Start()
+    public void StartGameConnection()
     {
         PhotonNetwork.GameVersion = appVersion;
 
