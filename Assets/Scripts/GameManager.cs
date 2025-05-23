@@ -25,6 +25,11 @@ public class GameManager : MonoBehaviourPunCallbacks
     public TMP_Text timerText;
 
     /// <summary>
+    /// (UI) 액션바 출력 시간
+    /// </summary>
+    public float actionBarDuration;
+
+    /// <summary>
     /// (UI) 액션바
     /// </summary>
     public TMP_Text actionBar;
@@ -92,12 +97,20 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     void FixedUpdate()
     {
-        // 서버 사이드 로직
+        /* 서버 사이드 로직 */
         if (this.phase != null)
             this.phase.Tick();
 
-        // 클라이언트 사이드 로직
-        // TODO 액션바
+        /* 클라이언트 사이드 로직 */
+
+        // 액션바 처리
+        if (this.actionBarDuration > 0)
+            this.actionBarDuration -= Time.fixedDeltaTime;
+        else
+        {
+            this.actionBarDuration = 0f;
+            this.actionBar.text = "";
+        }
     }
 
 #region RPC 처리
@@ -113,6 +126,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void UpdateActionBar(string message)
     {
+        this.actionBarDuration = 2f;
         this.actionBar.text = message;
     }
 
