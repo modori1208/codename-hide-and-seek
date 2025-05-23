@@ -46,8 +46,6 @@ public class PhotonLauncher : MonoBehaviourPunCallbacks
 
         // AutomaticallySyncScene 옵션 때문에 모든 플레이어가 동일한 씬을 가지게 되므로
         if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
-        {
             PhotonNetwork.LoadLevel("Game");
-        }
     }
 }
