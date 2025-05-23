@@ -1,5 +1,4 @@
 using Photon.Pun;
-using Photon.Realtime;
 using UnityEngine;
 
 /// <summary>
@@ -15,21 +14,6 @@ public class WaitPhase : Phase
         Debug.Log("[Phase - Wait] 초기화 요청");
         this.UpdateTimer(GameConstants.WaitTimeBeforeGameStart);
         this.session.photonView.RPC("UpdateActionBar", RpcTarget.All, "");
-    }
-
-    public override void Terminate()
-    {
-        Debug.Log("[Phase - Wait] 정리 요청");
-    }
-
-    public override void OnJoin(Player newPlayer)
-    {
-        Debug.Log($"[Phase - Wait] 플레이어 접속: {newPlayer.NickName}");
-    }
-
-    public override void OnLeft(Player otherPlayer)
-    {
-        Debug.Log($"[Phase - Wait] 플레이어 퇴장: {otherPlayer.NickName}");
     }
 
     public override void Tick()

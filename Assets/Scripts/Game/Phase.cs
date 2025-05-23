@@ -20,24 +20,24 @@ public abstract class Phase
     /// <summary>
     /// 페이즈 초기화를 시작할 때 호출됩니다.
     /// </summary>
-    public abstract void Initiailze();
+    public virtual void Initiailze() { }
 
     /// <summary>
     /// 페이즈가 종료되어 정리할 때 호출됩니다.
     /// </summary>
-    public abstract void Terminate();
+    public virtual void Terminate() { }
 
     /// <summary>
     /// 플레이어가 세션에 입장하면 호출됩니다.
     /// </summary>
     /// <param name="newPlayer">입장 플레이어</param>
-    public abstract void OnJoin(Player newPlayer);
+    public virtual void OnJoin(Player newPlayer) { }
 
     /// <summary>
     /// 플레이어가 세션에서 퇴장하면 호출됩니다.
     /// </summary>
     /// <param name="oldPlayer">퇴장 플레이어</param>
-    public abstract void OnLeft(Player oldPlayer);
+    public virtual void OnLeft(Player oldPlayer) { }
 
     /// <summary>
     /// 매 게임 시간(틱)마다 호출됩니다.
@@ -48,7 +48,7 @@ public abstract class Phase
     /// 게임 타이머를 업데이트합니다.
     /// </summary>
     /// <param name="time">게임 타이머</param>
-    protected virtual void UpdateTimer(float time)
+    protected void UpdateTimer(float time)
     {
         this.timeRemaining = time <= 0 ? 0 : time;
         this.session.photonView.RPC("UpdateTimer", RpcTarget.All, this.timeRemaining);
