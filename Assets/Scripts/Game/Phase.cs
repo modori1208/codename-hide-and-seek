@@ -50,7 +50,7 @@ public abstract class Phase
     /// <param name="time">게임 타이머</param>
     protected virtual void UpdateTimer(float time)
     {
-        this.timeRemaining = time;
-        this.session.photonView.RPC("UpdateTimer", RpcTarget.All, time);
+        this.timeRemaining = time <= 0 ? 0 : time;
+        this.session.photonView.RPC("UpdateTimer", RpcTarget.All, this.timeRemaining);
     }
 }
