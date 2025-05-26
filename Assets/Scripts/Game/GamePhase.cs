@@ -49,6 +49,13 @@ public class GamePhase : Phase
     public override void OnLeft(Player otherPlayer)
     {
         Debug.Log($"[Phase - Game] 플레이어 퇴장: {otherPlayer.ActorNumber}");
+
+        // 플레이어를 세션에서 제거 
+        if (this._playerStates.TryGetValue(otherPlayer.ActorNumber, out var prevState))
+        {
+            this._stateSizes[prevState] = this._stateSizes[prevState] - 1;
+            this._playerStates.Remove(otherPlayer.ActorNumber);
+        }
     }
 
     public override void Tick()
