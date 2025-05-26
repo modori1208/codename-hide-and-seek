@@ -91,7 +91,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     /// </summary>
     private void SpawnPlayer()
     {
-        GameObject obj = PhotonNetwork.Instantiate(this.playerPrefab.name, Vector3.zero, Quaternion.identity);
+        Vector3 spawnPosition = new(0, 0, this.playerPrefab.transform.position.z);
+        GameObject obj = PhotonNetwork.Instantiate(this.playerPrefab.name, spawnPosition, Quaternion.identity);
         if (obj.GetComponent<PhotonView>().IsMine)
             Camera.main.GetComponent<CameraFollow>().target = obj.transform;
     }
