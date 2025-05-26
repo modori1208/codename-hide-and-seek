@@ -16,11 +16,6 @@ public class PhotonLauncher : MonoBehaviourPunCallbacks
     {
         // 씬을 자동으로 동기화 (방장이 씬을 바꾸면 모두 따라감)
         PhotonNetwork.AutomaticallySyncScene = true;
-
-        // 에디터 상태에서는 즉시 연결 시작
-        #if UNITY_EDITOR
-            this.StartGameConnection();
-        #endif
     }
 
     public void StartGameConnection()
@@ -30,7 +25,7 @@ public class PhotonLauncher : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsConnected)
         {
             Debug.Log("[PhotonLauncher] 이미 서버에 연결됨, 방에 입장 시도");
-            PhotonNetwork.JoinRoom("Room");
+            this.OnConnectedToMaster();
         }
         else
         {
