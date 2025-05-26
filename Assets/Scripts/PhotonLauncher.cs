@@ -16,6 +16,11 @@ public class PhotonLauncher : MonoBehaviourPunCallbacks
     {
         // 씬을 자동으로 동기화 (방장이 씬을 바꾸면 모두 따라감)
         PhotonNetwork.AutomaticallySyncScene = true;
+
+        // 에디터 상태에서는 즉시 연결 시작
+        #if UNITY_EDITOR
+            this.StartGameConnection();
+        #endif
     }
 
     public void StartGameConnection()
@@ -24,8 +29,8 @@ public class PhotonLauncher : MonoBehaviourPunCallbacks
 
         if (PhotonNetwork.IsConnected)
         {
-            Debug.Log("[PhotonLauncher] 이미 서버에 연결됨, 랜덤 방에 입장 시도");
-            PhotonNetwork.JoinRandomRoom();
+            Debug.Log("[PhotonLauncher] 이미 서버에 연결됨, 방에 입장 시도");
+            PhotonNetwork.JoinRoom("Room");
         }
         else
         {
@@ -37,7 +42,20 @@ public class PhotonLauncher : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster()
     {
         Debug.Log("[PhotonLauncher] 마스터 서버에 연결됨. 방에 입장 시도 중...");
-        PhotonNetwork.JoinOrCreateRoom("DefaultRoom", new Photon.Realtime.RoomOptions(), Photon.Realtime.TypedLobby.Default);
+        PhotonNetwork.JoinOrCreateRoom("Room", new Photon.Realtime.RoomOptions(), Photon.Realtime.TypedLobby.Default);
+    }
+
+    public override void OnJoinRoomFailed(short returnCode, string message)
+    {
+        Debug.Log($"[PhotonLauncher] 접속에 실패함: {returnCode} {message}");
+
+        // [ 게임 상태이므로 참여가 불가능한 경우 ]
+        // 32764 상태는 존재하지 않는 방을 뜻하는데
+        // 이 게임에서 세션은 하나 뿐이므로 이 상태 코드를 사용
+        if (returnCode == 32764)
+        {
+            // TODO 중도 참여 불가능 알림창 띄우기
+        }
     }
 
     public override void OnJoinedRoom()

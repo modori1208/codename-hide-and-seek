@@ -65,16 +65,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         this.phase?.OnLeft(otherPlayer);
     }
 
-    public override void OnDisconnected(DisconnectCause cause)
-    {
-        Debug.LogWarning($"[GameManager] 서버 연결 끊김: {cause}");
-
-        if (cause != DisconnectCause.DisconnectByServerLogic)
-            return;
-
-        // TODO 게임에서 추방당한 것을 클라이언트에게 알리기
-    }
-
     /// <summary>
     /// 페이즈를 변경합니다.
     /// </summary>

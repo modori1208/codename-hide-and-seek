@@ -29,6 +29,7 @@ public class GamePhase : Phase
         Debug.Log("[Phase - Game] 초기화 요청");
         this.UpdateTimer(GameConstants.GameDuration);
         this.BroadcastActionBar("");
+        this.SetRoomJoinable(false);
 
         // 모든 플레이어를 도망자로 설정
         foreach (Player player in PhotonNetwork.PlayerList)
@@ -38,12 +39,6 @@ public class GamePhase : Phase
     public override void Terminate()
     {
         Debug.Log("[Phase - Game] 정리 요청");
-    }
-
-    public override void OnJoin(Player newPlayer)
-    {
-        // 중도 참여는 불가능하므로 세션에서 추방
-        PhotonNetwork.CloseConnection(newPlayer);
     }
 
     public override void OnLeft(Player otherPlayer)

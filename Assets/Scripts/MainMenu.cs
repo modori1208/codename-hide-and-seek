@@ -10,12 +10,13 @@ public class MainMenu : MonoBehaviour
 
     public void OnClickStart()
     {
-        Debug.Log("[Main Menu] Start 버튼 눌림 - Photon 연결 시도");
-        photonLauncher.StartGameConnection(); // Photon 연결 시작
+        Debug.Log("[Main Menu] Start 버튼 눌림 - 서버 연결 시도");
+        this.photonLauncher.StartGameConnection();
     }
 
     public void OnClickCredit()
     {
+        Debug.Log("[Main Menu] 크레딧 화면 이동");
         SceneManager.LoadScene("Credit");
     }
 

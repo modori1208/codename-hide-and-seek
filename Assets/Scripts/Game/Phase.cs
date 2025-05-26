@@ -45,6 +45,15 @@ public abstract class Phase
     public abstract void Tick();
 
     /// <summary>
+    /// 방 접속 가능 여부를 설정합니다.
+    /// </summary>
+    /// <param name="joinable">접속 가능 여부</param>
+    protected void SetRoomJoinable(bool joinable)
+    {
+        PhotonNetwork.CurrentRoom.IsOpen = joinable;
+    }
+
+    /// <summary>
     /// 게임 타이머를 업데이트합니다.
     /// </summary>
     /// <param name="time">게임 타이머</param>

@@ -14,6 +14,7 @@ public class WaitPhase : Phase
         Debug.Log("[Phase - Wait] 초기화 요청");
         this.UpdateTimer(GameConstants.WaitTimeBeforeGameStart);
         this.BroadcastActionBar("");
+        this.SetRoomJoinable(true);
     }
 
     public override void Tick()
