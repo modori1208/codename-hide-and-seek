@@ -2603,6 +2603,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 7606058919849491897, guid: 232193f9d3c824aa2aaa1d1cf63017cb, type: 3}
+  hiderAnimator: {fileID: 9100000, guid: 16947cf948e1046cfa522774bedfe3f7, type: 2}
+  seekerAnimator: {fileID: 9100000, guid: 687176024c78a4adcbb73ff123b8f42e, type: 2}
   timerText: {fileID: 1580891417}
   actionBarDuration: 0
   actionBar: {fileID: 1617938852}

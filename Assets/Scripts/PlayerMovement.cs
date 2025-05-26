@@ -29,6 +29,9 @@ public class PlayerMovement : MonoBehaviourPunCallbacks
     [HideInInspector]
     public bool canMove;
 
+    private bool wasWalkingLastSent;
+    private bool wasFacingRightLastSent;
+
     void Awake()
     {
         this.playerBody = GetComponent<Rigidbody2D>();
@@ -49,8 +52,29 @@ public class PlayerMovement : MonoBehaviourPunCallbacks
         if (this.photonView == null || !this.photonView.IsMine || !this.canMove)
             return;
 
-        // 플레이어 이동 처리
+        /* 플레이어 이동 처리 */
         playerBody.MovePosition(playerBody.position + movementVector * moveSpeed * Time.fixedDeltaTime);
+
+        /* 애니메이션 동기화 */
+        bool isWalking = this.movementVector != Vector2.zero;
+        bool isFacingRight = this.movementVector.x > 0;
+
+        // 걷기 상태 변경 감지
+        if (isWalking != this.wasWalkingLastSent)
+        {
+            this.wasWalkingLastSent = isWalking;
+            this.photonView.RPC("PlayerSpriteWalking", RpcTarget.All, this.photonView.OwnerActorNr, isWalking);
+        }
+
+        // 바라보는 방향 변경 감지
+        if (isWalking && this.movementVector.x != 0)
+        {
+            if (isFacingRight != this.wasFacingRightLastSent)
+            {
+                this.wasFacingRightLastSent = isFacingRight;
+                this.photonView.RPC("PlayerSpriteFaceRight", RpcTarget.All, this.photonView.OwnerActorNr, isFacingRight);
+            }
+        }
     }
 
     /// <summary>

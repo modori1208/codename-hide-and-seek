@@ -18,7 +18,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     /// <summary>
     /// 플레이어 프리팹
     /// </summary>
-    public GameObject playerPrefab;
+    [SerializeField]
+    private GameObject playerPrefab;
 
     /// <summary>
     /// (UI) 타이머 텍스트

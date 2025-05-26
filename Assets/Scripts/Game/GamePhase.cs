@@ -85,6 +85,12 @@ public class GamePhase : Phase
         this._playerStates[actorNumber] = state;
         int currentSize = this._stateSizes.GetValueOrDefault(state, 0);
         this._stateSizes[state] = currentSize + 1;
+
+        // 새 스프라이트 적용
+        if (state == PlayerState.Hider)
+            this.SendPlayerSpriteChange(actorNumber, true);
+        else if (state == PlayerState.Seeker)
+            this.SendPlayerSpriteChange(actorNumber, false);
     }
 
     private int GetPlayerSizeByState(PlayerState state) => this._stateSizes.GetValueOrDefault(state, 0);

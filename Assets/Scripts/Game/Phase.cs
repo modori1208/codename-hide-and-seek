@@ -1,3 +1,4 @@
+using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
 
@@ -10,7 +11,7 @@ public abstract class Phase
     protected readonly GameManager session;
 
     private float timeRemaining = 0f;
-    public virtual float TimeRemaining => timeRemaining;
+    public float TimeRemaining => timeRemaining;
 
     protected Phase(GameManager session)
     {
@@ -80,6 +81,19 @@ public abstract class Phase
     protected void SendActionBar(Player player, string message)
     {
         this.session.photonView.RPC("UpdateActionBar", player, message);
+    }
+
+    /// <summary>
+    /// 특정 플레이어의 스프라이트를 변경합니다.
+    /// </summary>
+    /// <param name="actorNumber">대상 플레이어의 아이디</param>
+    /// <param name="isHider">도망자 여부</param>
+    protected void SendPlayerSpriteChange(int actorNumber, bool isHider)
+    {
+        // 게임 오브젝트가 다르면 RPC를 전송할 수 없는 문제가 있어 우회
+        object[] content = new object[] { actorNumber, isHider };
+        RaiseEventOptions options = new() { Receivers = ReceiverGroup.All };
+        PhotonNetwork.RaiseEvent(GameConstants.SkinChangeEventCode, content, options, SendOptions.SendReliable);
     }
 
     /// <summary>

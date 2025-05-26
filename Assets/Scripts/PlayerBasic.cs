@@ -1,3 +1,4 @@
+using ExitGames.Client.Photon;
 using Photon.Pun;
 using UnityEngine;
 
@@ -13,6 +14,16 @@ public class PlayerBasic : MonoBehaviourPunCallbacks
     private GameManager gameManager;
 
     /// <summary>
+    /// 플레이어 스프라이트 애니메이터
+    /// </summary>
+    private Animator animator;
+
+    [SerializeField]
+    private RuntimeAnimatorController hiderAnimator;
+    [SerializeField]
+    private RuntimeAnimatorController seekerAnimator;
+
+    /// <summary>
     /// 플레이어의 2D 이동을 처리하는 컴포넌트
     /// </summary>
     private PlayerMovement playerMovement;
@@ -20,6 +31,8 @@ public class PlayerBasic : MonoBehaviourPunCallbacks
     void Awake()
     {
         this.gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        this.animator = GetComponent<Animator>();
+        this.animator.speed = 0f;
         this.playerMovement = GetComponent<PlayerMovement>();
     }
 
@@ -51,6 +64,58 @@ public class PlayerBasic : MonoBehaviourPunCallbacks
         // 2. 아이템과 충돌한 경우 (TODO)
         
         // 3. 탈출구와 충돌한 경우 (TODO)
+    }
+
+#endregion
+
+#region RPC 처리
+
+    public override void OnEnable()
+    {
+        base.OnEnable();
+        PhotonNetwork.NetworkingClient.EventReceived += PlayerSpriteChange;
+    }
+
+    public override void OnDisable()
+    {
+        base.OnDisable();
+        PhotonNetwork.NetworkingClient.EventReceived -= PlayerSpriteChange;
+    }
+
+    public void PlayerSpriteChange(EventData photonEvent)
+    {
+        if (photonEvent.Code == GameConstants.SkinChangeEventCode)
+        {
+            object[] data = (object[])photonEvent.CustomData;
+            int actorNumber = (int)data[0];
+            bool isHider = (bool)data[1];
+
+            if (this.photonView.OwnerActorNr != actorNumber)
+                return;
+
+            this.animator.runtimeAnimatorController = isHider ? this.hiderAnimator : this.seekerAnimator;
+        }
+    }
+
+    [PunRPC]
+    void PlayerSpriteWalking(int actorNumber, bool isWalking)
+    {
+        if (this.photonView.OwnerActorNr != actorNumber)
+            return;
+
+        this.animator.Play("boo", 0, 0f);
+        this.animator.speed = isWalking ? 1f : 0f;
+    }
+
+    [PunRPC]
+    void PlayerSpriteFaceRight(int actorNumber, bool isRight)
+    {
+        if (this.photonView.OwnerActorNr != actorNumber)
+            return;
+
+        Vector3 prevScale = this.transform.localScale;
+        float x = Mathf.Abs(prevScale.x) * (isRight ? -1 : 1);
+        this.transform.localScale = new(x, prevScale.y, prevScale.z);
     }
 
 #endregion

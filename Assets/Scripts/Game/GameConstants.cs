@@ -4,6 +4,15 @@
 public static class GameConstants
 {
 
+#region 패킷 아이디
+
+    /// <summary>
+    /// 플레이어의 스킨 변경을 요청하는 패킷 아이디
+    /// </summary>
+    public const byte SkinChangeEventCode = 1;
+
+#endregion
+
 #region 대기 규칙
 
     /// <summary>
