@@ -4,13 +4,8 @@ using UnityEngine;
 /// <summary>
 /// 플레이어의 2D 이동을 처리하는 스크립트
 /// </summary>
-public class PlayerMovement : MonoBehaviour // TODO MonoBehaviourPunCallbacks??
+public class PlayerMovement : MonoBehaviourPunCallbacks
 {
-
-    /// <summary>
-    /// PhotonView
-    /// </summary>
-    private PhotonView photonView;
 
     /// <summary>
     /// 플레이어의 물리 이동을 담당하는 Rigidbody2D 컴포넌트
@@ -36,7 +31,6 @@ public class PlayerMovement : MonoBehaviour // TODO MonoBehaviourPunCallbacks??
 
     void Awake()
     {
-        this.photonView = GetComponent<PhotonView>();
         this.playerBody = GetComponent<Rigidbody2D>();
         this.canMove = true;
     }
@@ -52,30 +46,21 @@ public class PlayerMovement : MonoBehaviour // TODO MonoBehaviourPunCallbacks??
 
     void FixedUpdate()
     {
-        if (photonView == null || !photonView.IsMine || !this.canMove)
+        if (this.photonView == null || !this.photonView.IsMine || !this.canMove)
             return;
 
         // 플레이어 이동 처리
         playerBody.MovePosition(playerBody.position + movementVector * moveSpeed * Time.fixedDeltaTime);
     }
 
-#region 충돌 처리
-
-    void OnCollisionEnter2D(Collision2D collision)
+    /// <summary>
+    /// 플레이어의 움직임 속도를 조절합니다.
+    /// </summary>
+    /// <param name="speed">이동 속도 (0~10 사이의 실수)</param>
+    public void SetMovementSpeed(float speed)
     {
-        // TODO 충돌 시작 시 처리할 코드
+        if (speed < 0 || speed > 10)
+            throw new System.Exception($"{speed}는 허용되지 않는 속도입니다.");
+        this.moveSpeed = speed;
     }
-
-    void OnCollisionStay2D(Collision2D collision)
-    {
-        // TODO 충돌 중 처리할 코드
-    }
-
-    void OnCollisionExit2D(Collision2D collision)
-    {
-        // TODO: 충돌 종료 시 처리할 코드
-    }
-
-#endregion
-
 }

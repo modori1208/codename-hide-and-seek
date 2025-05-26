@@ -36,11 +36,9 @@ MonoBehaviour:
   RpcList:
   - ClickRpc
   - DestroyRpc
-  - DestroySpaceship
   - UpdateTimer
-  - Fire
-  - RespawnSpaceship
-  - ShowEndResult
+  - UpdateActionBar
+  - GameEnded
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0
