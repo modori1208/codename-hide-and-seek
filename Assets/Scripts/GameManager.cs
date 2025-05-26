@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     /// 게임 페이즈
     /// </summary>
     private Phase phase;
+    public virtual Phase Phase => phase;
 
     /// <summary>
     /// 플레이어 프리팹
@@ -54,14 +55,24 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        Debug.Log($"[GameManager] 플레이어 입장: {newPlayer.NickName}");
+        Debug.Log($"[GameManager] 플레이어 입장: {newPlayer.ActorNumber}");
         this.phase?.OnJoin(newPlayer);
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        Debug.Log($"[GameManager] 플레이어 퇴장: {otherPlayer.NickName}");
+        Debug.Log($"[GameManager] 플레이어 퇴장: {otherPlayer.ActorNumber}");
         this.phase?.OnLeft(otherPlayer);
+    }
+
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        Debug.LogWarning($"[GameManager] 서버 연결 끊김: {cause}");
+
+        if (cause != DisconnectCause.DisconnectByServerLogic)
+            return;
+
+        // TODO 게임에서 추방당한 것을 클라이언트에게 알리기
     }
 
     /// <summary>
@@ -128,6 +139,14 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         this.actionBarDuration = 2f;
         this.actionBar.text = message;
+    }
+
+    [PunRPC]
+    void GameEnded(int raw)
+    {
+        GameEndState state = (GameEndState)raw;
+        // TODO 게임 종료 상태를 어떻게 보여줄 것인가? GameResultPhase랑 연계
+        Debug.Log($"게임 종료: {state}");
     }
 
 #endregion

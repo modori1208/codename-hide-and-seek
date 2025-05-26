@@ -53,4 +53,32 @@ public abstract class Phase
         this.timeRemaining = time <= 0 ? 0 : time;
         this.session.photonView.RPC("UpdateTimer", RpcTarget.All, this.timeRemaining);
     }
+
+    /// <summary>
+    /// 세션의 모든 플레이어에게 액션바를 전송합니다.
+    /// </summary>
+    /// <param name="message">액션바의 내용</param>
+    protected void BroadcastActionBar(string message)
+    {
+        this.session.photonView.RPC("UpdateActionBar", RpcTarget.All, message);
+    }
+
+    /// <summary>
+    /// 특정 플레이어에게 액션바를 전송합니다.
+    /// </summary>
+    /// <param name="player">대상 플레이어</param>
+    /// <param name="message">액션바의 내용</param>
+    protected void SendActionBar(Player player, string message)
+    {
+        this.session.photonView.RPC("UpdateActionBar", player, message);
+    }
+
+    /// <summary>
+    /// 세션의 모든 플레이어에게 게임 종료 상태를 전송합니다.
+    /// </summary>
+    /// <param name="state">게임 종료 상태</param>
+    protected void BroadcastGameEnd(GameEndState state)
+    {
+        this.session.photonView.RPC("GameEnded", RpcTarget.All, (int)state);
+    }
 }
