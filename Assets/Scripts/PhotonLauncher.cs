@@ -1,5 +1,7 @@
 using Photon.Pun;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// 멀티플레이를 위한 Photon PUN 런처
@@ -11,11 +13,14 @@ public class PhotonLauncher : MonoBehaviourPunCallbacks
     /// 클라이언트 프로토콜 버전
     /// </summary>
     private readonly string appVersion = "1";
+    public NoticeUI _notice;
 
     void Awake()
     {
         // 씬을 자동으로 동기화 (방장이 씬을 바꾸면 모두 따라감)
         PhotonNetwork.AutomaticallySyncScene = true;
+
+        _notice = FindObjectOfType<NoticeUI>(true);
     }
 
     public void StartGameConnection()
@@ -50,6 +55,9 @@ public class PhotonLauncher : MonoBehaviourPunCallbacks
         if (returnCode == 32764)
         {
             // TODO 중도 참여 불가능 알림창 띄우기
+            // Main씬으로 넘어가서 알림창 띄우기
+            SceneMessage.Instance.messageToShow = "게임중이므로 잠시후에 다시 접속해주십시오.";
+            SceneManager.LoadScene("MainScene");
         }
     }
 
