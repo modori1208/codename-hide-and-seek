@@ -1,8 +1,12 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class CreditUI : MonoBehaviour
+/// <summary>
+/// 크레딧 메뉴 캔버스 스크립트
+/// </summary>
+public class CreditMenu : MonoBehaviour
 {
+
     public void OnClickBack()
     {
         SceneManager.LoadScene("Main");

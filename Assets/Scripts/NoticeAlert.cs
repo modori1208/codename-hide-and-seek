@@ -2,27 +2,33 @@ using UnityEngine;
 using TMPro;
 using System.Collections;
 
-public class NoticeUI : MonoBehaviour
+/// <summary>
+/// ì•Œë¦¼ì°½ ìŠ¤í¬ë¦½íŠ¸
+/// </summary>
+public class NoticeAlert : MonoBehaviour
 {
+
+    public static string messageToShow = "";
+
     [Header("SubNotice")]
     public GameObject subbox;
     public TMP_Text subintext;
     public Animator subani;
 
-    private WaitForSeconds _UIDelay1 = new WaitForSeconds(2.0f);
-    private WaitForSeconds _UIDelay2 = new WaitForSeconds(0.3f);
+    private readonly WaitForSeconds _UIDelay1 = new(2.0f);
+    private readonly WaitForSeconds _UIDelay2 = new(0.3f);
 
     void Start()
     {
         subbox.SetActive(false);
 
-        // ¾À ¸Ş½ÃÁö°¡ ÀÖ´Â °æ¿ì ¾Ë¸²Ã¢ ¶ç¿ò
-        if (SceneMessage.Instance != null && !string.IsNullOrEmpty(SceneMessage.Instance.messageToShow))
+        // ì”¬ ë©”ì‹œì§€ê°€ ìˆëŠ” ê²½ìš° ì•Œë¦¼ì°½ ë„ì›€
+        if (!string.IsNullOrEmpty(NoticeAlert.messageToShow))
         {
-            SUB(SceneMessage.Instance.messageToShow);
+            SUB(NoticeAlert.messageToShow);
 
-            // ¸Ş½ÃÁö¸¦ ÇÑ ¹ø¸¸ º¸¿©ÁÖ°í ºñ¿ò
-            SceneMessage.Instance.messageToShow = "";
+            // ë©”ì‹œì§€ë¥¼ í•œ ë²ˆë§Œ ë³´ì—¬ì£¼ê³  ë¹„ì›€
+            NoticeAlert.messageToShow = "";
         }
     }
 
