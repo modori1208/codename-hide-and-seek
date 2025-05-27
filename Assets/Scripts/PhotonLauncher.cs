@@ -1,5 +1,6 @@
 using Photon.Pun;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// 멀티플레이를 위한 Photon PUN 런처
@@ -49,7 +50,9 @@ public class PhotonLauncher : MonoBehaviourPunCallbacks
         // 이 게임에서 세션은 하나 뿐이므로 이 상태 코드를 사용
         if (returnCode == 32764)
         {
-            // TODO 중도 참여 불가능 알림창 띄우기
+            // 중도 참여 불가능 알림창 띄우기
+            NoticeAlert.messageToShow = "게임 중이므로 잠시 후에 다시 접속해주십시오.";
+            SceneManager.LoadScene("MainScene");
         }
     }
 

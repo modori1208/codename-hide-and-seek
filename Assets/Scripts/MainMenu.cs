@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class MainMenu : MonoBehaviour
 {
+
     public PhotonLauncher photonLauncher;
 
     public void OnClickStart()
