@@ -1,6 +1,5 @@
 using Photon.Pun;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 /// <summary>
 /// 멀티플레이를 위한 Photon PUN 런처
@@ -51,8 +50,7 @@ public class PhotonLauncher : MonoBehaviourPunCallbacks
         if (returnCode == 32764)
         {
             // 중도 참여 불가능 알림창 띄우기
-            NoticeAlert.messageToShow = "게임 중이므로 잠시 후에 다시 접속해주십시오.";
-            SceneManager.LoadScene("MainScene");
+            NoticeAlert.Create("게임 중이므로 잠시 후에 다시 접속해주십시오.");
         }
     }
 
