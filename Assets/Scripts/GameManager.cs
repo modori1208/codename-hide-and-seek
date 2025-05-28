@@ -117,7 +117,10 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
     }
 
-    public void OnClickBack() // exit버튼
+    /// <summary>
+    /// 게임 나가기 버튼
+    /// </summary>
+    public void OnClickBack()
     {
         PhotonNetwork.Disconnect();
         SceneManager.LoadScene("Main");
@@ -144,21 +147,12 @@ public class GameManager : MonoBehaviourPunCallbacks
     void GameEnded(int raw)
     {
         GameEndState state = (GameEndState)raw;
-        // TODO 게임 종료 상태를 어떻게 보여줄 것인가? GameResultPhase랑 연계
         if (state == GameEndState.NotEnoughPlayers)
-        {
-            NoticeAlert.Create("인원부족으로 인해 게임이 종료되었습니다.");
-        }
+            NoticeAlert.Create("인원 부족으로 인해 게임이 종료되었습니다.");
         else if (state == GameEndState.HidersWin)
-        {
-            NoticeAlert.Create("도망자팀이 이겼습니다!");
-        }
+            NoticeAlert.Create("학생들이 이겼습니다!");
         else if (state == GameEndState.SeekersWin)
-        {
-            NoticeAlert.Create("술래팀이 이겼습니다!");
-        }
-        this.UpdateActionBar($"게임이 종료되었습니다. {state}");
-        Debug.Log($"게임 종료: {state}");
+            NoticeAlert.Create("선생님이 이겼습니다!");
     }
 
 #endregion
