@@ -14,13 +14,16 @@ public class PhotonLauncher : MonoBehaviourPunCallbacks
 
     void Awake()
     {
+        // 게임 프로토콜 버전 설정
+        PhotonNetwork.GameVersion = appVersion;
+
         // 씬을 자동으로 동기화 (방장이 씬을 바꾸면 모두 따라감)
         PhotonNetwork.AutomaticallySyncScene = true;
     }
 
     public void StartGameConnection()
     {
-        PhotonNetwork.GameVersion = appVersion;
+        NoticeAlert.Create("서버에 연결 중입니다...", 10f);
 
         if (PhotonNetwork.IsConnected)
         {

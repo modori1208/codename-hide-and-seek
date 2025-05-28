@@ -49,10 +49,7 @@ public abstract class Phase
     /// 방 접속 가능 여부를 설정합니다.
     /// </summary>
     /// <param name="joinable">접속 가능 여부</param>
-    protected void SetRoomJoinable(bool joinable)
-    {
-        PhotonNetwork.CurrentRoom.IsOpen = joinable;
-    }
+    protected void SetRoomJoinable(bool joinable) => PhotonNetwork.CurrentRoom.IsOpen = joinable;
 
     /// <summary>
     /// 게임 타이머를 업데이트합니다.

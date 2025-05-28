@@ -51,6 +51,20 @@ public class GameManager : MonoBehaviourPunCallbacks
             this.SpawnPlayer();
     }
 
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        // 마스터 클라이언트의 퇴장으로 게임 진행이 불가능하므로 퇴장
+        MainMenu.disconnectByMasterClient = true;
+        PhotonNetwork.Disconnect();
+    }
+
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        // 서버와 연결이 끊긴 경우 씬 전환
+        this.phase = null;
+        SceneManager.LoadScene("Main");
+    }
+
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         Debug.Log($"[GameManager] 플레이어 입장: {newPlayer.ActorNumber}");
@@ -61,6 +75,15 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         Debug.Log($"[GameManager] 플레이어 퇴장: {otherPlayer.ActorNumber}");
         this.phase?.OnLeft(otherPlayer);
+    }
+
+    /// <summary>
+    /// 게임 나가기 버튼
+    /// </summary>
+    public void OnClickBack(GameObject exitButton)
+    {
+        exitButton.SetActive(false);
+        PhotonNetwork.Disconnect();
     }
 
     /// <summary>
@@ -147,15 +170,6 @@ public class GameManager : MonoBehaviourPunCallbacks
             this.actionBarDuration = 0f;
             this.actionBar.text = "";
         }
-    }
-
-    /// <summary>
-    /// 게임 나가기 버튼
-    /// </summary>
-    public void OnClickBack()
-    {
-        PhotonNetwork.Disconnect();
-        SceneManager.LoadScene("Main");
     }
 
 #region RPC 처리

@@ -7,7 +7,20 @@ using UnityEngine.SceneManagement;
 public class MainMenu : MonoBehaviour
 {
 
-    public PhotonLauncher photonLauncher;
+    public static bool disconnectByMasterClient = false;
+
+    [SerializeField]
+    private PhotonLauncher photonLauncher;
+
+    void FixedUpdate()
+    {
+        // Start 메서드에서는 오브젝트가 모두 로드되지 않았기에 (...)
+        if (disconnectByMasterClient)
+        {
+            NoticeAlert.Create("호스트 플레이어가 게임을 종료하였습니다.\n서버에 다시 접속해주세요.", 4.0f);
+            disconnectByMasterClient = false;
+        }
+    }
 
     public void OnClickStart()
     {
