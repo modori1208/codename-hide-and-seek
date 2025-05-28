@@ -2,6 +2,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// 게임 세션을 관리하는 스크립트
@@ -114,6 +115,12 @@ public class GameManager : MonoBehaviourPunCallbacks
             this.actionBarDuration = 0f;
             this.actionBar.text = "";
         }
+    }
+
+    public void OnClickBack()
+    {
+        PhotonNetwork.Disconnect();
+        SceneManager.LoadScene("Main");
     }
 
 #region RPC 처리
