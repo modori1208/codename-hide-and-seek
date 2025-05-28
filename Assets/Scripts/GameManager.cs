@@ -15,26 +15,24 @@ public class GameManager : MonoBehaviourPunCallbacks
     private Phase phase;
     public virtual Phase Phase => phase;
 
-    /// <summary>
-    /// 플레이어 프리팹
-    /// </summary>
     [SerializeField]
     private GameObject playerPrefab;
 
-    /// <summary>
-    /// (UI) 타이머 텍스트
-    /// </summary>
-    public TMP_Text timerText;
+    [SerializeField]
+    private GameObject keyContainerHud;
+    [SerializeField]
+    private PolygonCollider2D itemSpawnAllowArea;
+    [SerializeField]
+    private PolygonCollider2D itemSpawnForbiddenArea;
+    [SerializeField]
+    private GameObject itemPrefab; // TODO 이거 필요해요?
 
-    /// <summary>
-    /// (UI) 액션바 출력 시간
-    /// </summary>
-    public float actionBarDuration;
+    [SerializeField]
+    private TMP_Text timerText;
 
-    /// <summary>
-    /// (UI) 액션바
-    /// </summary>
-    public TMP_Text actionBar;
+    [SerializeField]
+    private TMP_Text actionBar;
+    private float actionBarDuration;
 
     void Start()
     {
@@ -98,6 +96,42 @@ public class GameManager : MonoBehaviourPunCallbacks
             Camera.main.GetComponent<CameraFollow>().target = obj.transform;
     }
 
+    /// <summary>
+    /// 아이템을 스폰합니다.
+    /// </summary>
+    /// <param name="prefabName">프리팹 이름</param>
+    /// <returns>스폰된 아이템 오브젝트</returns>
+    public GameObject SpawnItem(string prefabName)
+    {
+        /* 아이템 스폰 가능 위치 탐색 */
+        Vector2 spawnPoint;
+        int attempts = 0;
+
+        do
+        {
+            Bounds bounds = this.itemSpawnAllowArea.bounds;
+            spawnPoint = new Vector2(
+                Random.Range(bounds.min.x, bounds.max.x),
+                Random.Range(bounds.min.y, bounds.max.y)
+            );
+            attempts++;
+        } while (
+            // 결정된 위치가 스폰 허용 범위 안에 들어있고 비허용 범위 안에 없는 경우
+            (!this.itemSpawnAllowArea.OverlapPoint(spawnPoint) ||
+                this.itemSpawnForbiddenArea.OverlapPoint(spawnPoint))
+            // 시도 횟수가 30회를 초과하면 아이템 스폰을 포기 (...)
+            && attempts < 30
+        );
+
+        /* 아이템 스폰 시도 횟수를 넘은 경우 처리하지 않음 */
+        if (attempts >= 30)
+            return null;
+
+        /* 아이템 스폰 */
+        Vector3 spawnPointV3 = new(spawnPoint.x, spawnPoint.y, -1);
+        return PhotonNetwork.Instantiate(prefabName, spawnPointV3, Quaternion.identity);
+    }
+
     void FixedUpdate()
     {
         /* 서버 사이드 로직 */
@@ -132,6 +166,9 @@ public class GameManager : MonoBehaviourPunCallbacks
         this.actionBarDuration = 2f;
         this.actionBar.text = message;
     }
+
+    [PunRPC]
+    void UpdateKeyCount(int count) => this.keyContainerHud.GetComponent<KeyCountHud>().UpdateKeyCount(count);
 
     [PunRPC]
     void GameEnded(int raw)

@@ -13,6 +13,8 @@ public class GamePhase : Phase
     private bool _selectedRole;
     private readonly Dictionary<int, PlayerState> _playerStates = new();
     private readonly Dictionary<PlayerState, int> _stateSizes = new();
+    public readonly Dictionary<GameObject, double> spawnedItem = new();
+    private int _collectedKeySize;
 
     public enum PlayerState
     {
@@ -39,6 +41,18 @@ public class GamePhase : Phase
     public override void Terminate()
     {
         Debug.Log("[Phase - Game] 정리 요청");
+
+        // 모든 플레이어의 스킨을 초기화
+        foreach (Player player in PhotonNetwork.PlayerList)
+            this.SendPlayerSpriteChange(player.ActorNumber, true);
+
+        // 클라이언트에게 빈 열쇠 정보 전송
+        this.KeyReset();
+
+        // 세션에 있는 모든 아이템 제거
+        List<GameObject> itemsToRemove = new();
+        foreach (var pair in this.spawnedItem)
+            PhotonNetwork.Destroy(pair.Key);
     }
 
     public override void OnLeft(Player otherPlayer)
@@ -66,7 +80,10 @@ public class GamePhase : Phase
         this.UpdateTimer(this.TimeRemaining - Time.fixedDeltaTime);
         this.SelectRole();
         this.CheckPlayerSize();
+        this.SpawnItems();
     }
+
+#region 플레이어 상태 관리
 
     private void SetPlayerState(Player player, PlayerState state) => this.SetPlayerState(player.ActorNumber, state);
 
@@ -101,8 +118,13 @@ public class GamePhase : Phase
     private PlayerState GetPlayerState(Player player) => this.GetPlayerState(player.ActorNumber);
     private PlayerState GetPlayerState(int actorNumber) => this._playerStates[actorNumber];
 
+    public bool IsHider(Player player) => this.IsHider(player.ActorNumber);
+    public bool IsHider(int actorNumber) => this.GetPlayerState(actorNumber) == PlayerState.Hider;
+
     public bool IsSeeker(Player player) => this.IsSeeker(player.ActorNumber);
     public bool IsSeeker(int actorNumber) => this.GetPlayerState(actorNumber) == PlayerState.Seeker;
+
+#endregion
 
 #region 게임 틱 로직
 
@@ -179,5 +201,67 @@ public class GamePhase : Phase
         }
     }
 
-    #endregion
+    /// <summary>
+    /// 아이템 스폰 로직
+    /// </summary>
+    private void SpawnItems()
+    {
+        /* 아직 역할이 정해지지 않은 경우 아이템을 생성하지 않음 */
+        if (!this._selectedRole)
+            return;
+
+        /* 아이템 수명 주기 확인 후 제거 */
+        List<GameObject> itemsToRemove = new();
+        foreach (var pair in this.spawnedItem)
+            if (PhotonNetwork.Time - pair.Value > GameConstants.ItemLifeTime)
+                itemsToRemove.Add(pair.Key);
+
+        foreach (GameObject item in itemsToRemove)
+        {
+            this.spawnedItem.Remove(item);
+            PhotonNetwork.Destroy(item);
+        }
+
+        /* 키 아이템 스폰 */
+        if (spawnedItem.Count < 10)
+        {
+            GameObject obj = this.session.SpawnItem("ItemKey");
+            this.spawnedItem.Add(obj, PhotonNetwork.Time);
+        }
+    }
+
+#endregion
+
+#region 아이템 관리
+
+    public void KeyCollect()
+    {
+        // 이미 탈출에 필요한 키를 모두 획득한 경우
+        if (this.CanEscape())
+            return;
+
+        this._collectedKeySize++;
+        if (this.CanEscape())
+            this.BroadcastActionBar("이제 탈출구로 탈출할 수 있습니다!");
+
+        this.BroadcastKeyCount();
+    }
+
+    public void KeyReset()
+    {
+        this._collectedKeySize = 0;
+        this.BroadcastKeyCount();
+    }
+
+    public bool CanEscape()
+    {
+        return this._collectedKeySize >= GameConstants.KeySizeForEscape;
+    }
+
+    private void BroadcastKeyCount()
+    {
+        this.session.photonView.RPC("UpdateKeyCount", RpcTarget.All, this._collectedKeySize);
+    }
+
+#endregion
 }

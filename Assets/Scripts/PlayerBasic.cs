@@ -54,15 +54,24 @@ public class PlayerBasic : MonoBehaviourPunCallbacks
             PhotonView otherView = collision.gameObject.GetComponent<PhotonView>();
 
             // 내 역할이 술래이고 상대가 도망자 경우
-            if (game.IsSeeker(this.photonView.OwnerActorNr) && !game.IsSeeker(otherView.OwnerActorNr))
+            if (game.IsSeeker(this.photonView.OwnerActorNr) && game.IsHider(otherView.OwnerActorNr))
             {
                 // TODO 플레이어 사망을 어떻게 처리할 것인가?
                 game.SetPlayerState(otherView.OwnerActorNr, GamePhase.PlayerState.Dead);
             }
         }
 
-        // 2. 아이템과 충돌한 경우 (TODO)
-        
+        // 2. 아이템과 충돌한 경우
+        if (collision.gameObject.CompareTag("Item"))
+        {
+            Item item = collision.gameObject.GetComponent<Item>();
+            if (item.Trigger(game, this.gameObject, this.photonView))
+            {
+                game.spawnedItem.Remove(collision.gameObject);
+                PhotonNetwork.Destroy(collision.gameObject);
+            }
+        }
+
         // 3. 탈출구와 충돌한 경우 (TODO)
     }
 

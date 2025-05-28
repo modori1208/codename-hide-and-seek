@@ -39,5 +39,15 @@ public static class GameConstants
     /// </summary>
     public const float TimeSelectRole = 8f; //160f;
 
+    /// <summary>
+    /// 탈출을 위한 열쇠의 개수
+    /// </summary>
+    public const int KeySizeForEscape = 5;
+
+    /// <summary>
+    /// 아이템의 수명 (초)
+    /// </summary>
+    public const int ItemLifeTime = 20;
+
 #endregion
 }
