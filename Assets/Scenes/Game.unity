@@ -284,50 +284,63 @@ PolygonCollider2D:
       - {x: 12.857637, y: -11.092583}
       - {x: 12.874721, y: 13.105962}
   m_UseDelaunayMesh: 0
---- !u!1 &341967358
-GameObject:
+--- !u!1001 &411087113
+PrefabInstance:
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 341967360}
-  - component: {fileID: 341967359}
-  m_Layer: 0
-  m_Name: NoticeAlert
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &341967359
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 341967358}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c2537f5089856ac4bb3ab8d2d4fa1a7a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &341967360
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 341967358}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1753806208148596029, guid: 3d4292fe3a32c4fd98aefd1e139e6b93, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1753806208148596029, guid: 3d4292fe3a32c4fd98aefd1e139e6b93, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1753806208148596029, guid: 3d4292fe3a32c4fd98aefd1e139e6b93, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1753806208148596029, guid: 3d4292fe3a32c4fd98aefd1e139e6b93, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1753806208148596029, guid: 3d4292fe3a32c4fd98aefd1e139e6b93, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1753806208148596029, guid: 3d4292fe3a32c4fd98aefd1e139e6b93, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1753806208148596029, guid: 3d4292fe3a32c4fd98aefd1e139e6b93, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1753806208148596029, guid: 3d4292fe3a32c4fd98aefd1e139e6b93, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1753806208148596029, guid: 3d4292fe3a32c4fd98aefd1e139e6b93, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1753806208148596029, guid: 3d4292fe3a32c4fd98aefd1e139e6b93, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5817749971023194523, guid: 3d4292fe3a32c4fd98aefd1e139e6b93, type: 3}
+      propertyPath: m_Name
+      value: NoticeAlert
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 3d4292fe3a32c4fd98aefd1e139e6b93, type: 3}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -23204,7 +23217,7 @@ SceneRoots:
   - {fileID: 519420032}
   - {fileID: 619394802}
   - {fileID: 929989994}
-  - {fileID: 341967360}
+  - {fileID: 411087113}
   - {fileID: 1563058214}
   - {fileID: 1213478830}
   - {fileID: 2140440}

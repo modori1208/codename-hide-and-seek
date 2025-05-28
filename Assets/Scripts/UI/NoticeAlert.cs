@@ -20,21 +20,32 @@ public class NoticeAlert : MonoBehaviour
     /// 알림창을 생성합니다.
     /// </summary>
     /// <param name="message">알림창 메시지</param>
-    public static void Create(string mesage)
+    /// <returns>알림창 오브젝트</returns>
+    public static GameObject Create(string message) => Create(message, 2.0f);
+
+    /// <summary>
+    /// 알림창을 생성합니다.
+    /// </summary>
+    /// <param name="message">알림창 메시지</param>
+    /// <param name="duration">알림창 지속 시간 (음수의 경우 항상 켜짐)</param>
+    /// <returns>알림창 오브젝트</returns>
+    public static GameObject Create(string message, float duration)
     {
         GameObject obj = GameObject.Find("NoticeAlert");
         if (obj == null)
-            throw new NullReferenceException("이 메서드를 사용하려면 해당 씬에 \"NoticeAlert\" 이름의 오브젝트와 이 스크립트가 있어야합니다.");
+            throw new NullReferenceException("이 메서드를 사용하려면 해당 씬에 \"NoticeAlert\" 프리팹이 있어야합니다.");
 
         NoticeAlert alert = obj.GetComponent<NoticeAlert>();
-        alert.CreateAlert(mesage);
+        return alert.CreateAlert(message, duration);
     }
 
     /// <summary>
     /// 알림창을 생성합니다.
     /// </summary>
     /// <param name="message">알림창 메시지</param>
-    public void CreateAlert(string message)
+    /// <param name="duration">알림창 지속 시간 (음수의 경우 항상 켜짐)</param>
+    /// <returns>알림창 오브젝트</returns>
+    public GameObject CreateAlert(string message, float duration)
     {
         // 알림창 오브젝트 생성
         GameObject alert = Instantiate(this.alertPrefab, GameObject.Find("Canvas").transform);
@@ -45,22 +56,27 @@ public class NoticeAlert : MonoBehaviour
         textObj.text = message;
 
         // 애니메이션 재생
-        StartCoroutine(AnimationDelay(alert));
+        StartCoroutine(AnimationDelay(alert, duration));
+        return alert;
     }
 
-    private IEnumerator AnimationDelay(GameObject alert)
+    private IEnumerator AnimationDelay(GameObject alert, float duration)
     {
         Animator animator = alert.GetComponent<Animator>();
 
         // 알림창 생성 애니메이션
         alert.SetActive(true);
         animator.SetBool("isOn", true);
-        yield return new WaitForSeconds(2.0f);
 
         // 알림창 제거 애니메이션
-        animator.SetBool("isOn", false);
-        yield return new WaitForSeconds(3.0f);
-        alert.SetActive(false);
-        Destroy(alert);
+        if (duration >= 0)
+        {
+            yield return new WaitForSeconds(duration);
+
+            animator.SetBool("isOn", false);
+            yield return new WaitForSeconds(3.0f);
+            alert.SetActive(false);
+            Destroy(alert);
+        }
     }
 }
