@@ -25,8 +25,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     private PolygonCollider2D itemSpawnAllowArea;
     [SerializeField]
     private PolygonCollider2D itemSpawnForbiddenArea;
-    [SerializeField]
-    private GameObject itemPrefab; // TODO 이거 필요해요?
 
     [SerializeField]
     private TMP_Text timerText;
