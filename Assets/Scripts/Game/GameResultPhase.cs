@@ -6,8 +6,6 @@ using UnityEngine;
 public class GameResultPhase : Phase
 {
 
-    // TODO 결과 표시를 어떻게 할 것인가?
-
     public GameResultPhase(GameManager session) : base(session) { }
 
     public override void Initiailze()
