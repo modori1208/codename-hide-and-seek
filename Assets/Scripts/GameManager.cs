@@ -2,6 +2,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// 게임 세션을 관리하는 스크립트
@@ -116,6 +117,15 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
     }
 
+    /// <summary>
+    /// 게임 나가기 버튼
+    /// </summary>
+    public void OnClickBack()
+    {
+        PhotonNetwork.Disconnect();
+        SceneManager.LoadScene("Main");
+    }
+
 #region RPC 처리
 
     [PunRPC]
@@ -137,8 +147,12 @@ public class GameManager : MonoBehaviourPunCallbacks
     void GameEnded(int raw)
     {
         GameEndState state = (GameEndState)raw;
-        // TODO 게임 종료 상태를 어떻게 보여줄 것인가? GameResultPhase랑 연계
-        Debug.Log($"게임 종료: {state}");
+        if (state == GameEndState.NotEnoughPlayers)
+            NoticeAlert.Create("인원 부족으로 인해 게임이 종료되었습니다.");
+        else if (state == GameEndState.HidersWin)
+            NoticeAlert.Create("학생들이 이겼습니다!");
+        else if (state == GameEndState.SeekersWin)
+            NoticeAlert.Create("선생님이 이겼습니다!");
     }
 
 #endregion
