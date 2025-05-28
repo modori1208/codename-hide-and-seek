@@ -15,6 +15,14 @@ public class GameResultPhase : Phase
         this.BroadcastActionBar("");
     }
 
+    public override void Terminate()
+    {
+        Debug.Log("[Phase - Result] 정리 요청");
+
+        // 모든 플레이어를 부활 처리
+        this.BroadcastExitSpectatorMode();
+    }
+
     public override void Tick()
     {
         // 대기 페이즈 이동

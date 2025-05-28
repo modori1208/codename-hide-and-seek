@@ -94,6 +94,39 @@ public abstract class Phase
     }
 
     /// <summary>
+    /// 특정 플레이어의 위치를 이동합니다.
+    /// </summary>
+    /// <param name="player">대상 플레이어</param>
+    /// <param name="x">텔레포트 위치 x</param>
+    /// <param name="y">텔레포트 위치 y</param>
+    protected void SendTeleport(Player player, float x, float y)
+    {
+        this.session.photonView.RPC("TeleportTo", player, x, y);
+    }
+
+    /// <summary>
+    /// 특정 플레이어를 관전자 모드로 전환합니다.
+    /// </summary>
+    /// <param name="actorNumber">대상 플레이어의 아이디</param>
+    public void SendEnterSpectatorMode(int actorNumber)
+    {
+        foreach (Player player in PhotonNetwork.PlayerList)
+            if (player.ActorNumber == actorNumber)
+            {
+                this.session.photonView.RPC("EnterSpectatorMode", player);
+                return;
+            }
+    }
+
+    /// <summary>
+    /// 관전자 모드인 플레이어를 복귀 시킵니다.
+    /// </summary>
+    public void BroadcastExitSpectatorMode()
+    {
+        this.session.photonView.RPC("ExitSpectatorMode", RpcTarget.All);
+    }
+
+    /// <summary>
     /// 세션의 모든 플레이어에게 게임 종료 상태를 전송합니다.
     /// </summary>
     /// <param name="state">게임 종료 상태</param>

@@ -42,6 +42,9 @@ MonoBehaviour:
   - PlayerSpriteFaceRight
   - PlayerSpriteWalking
   - UpdateKeyCount
+  - TeleportTo
+  - EnterSpectatorMode
+  - ExitSpectatorMode
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

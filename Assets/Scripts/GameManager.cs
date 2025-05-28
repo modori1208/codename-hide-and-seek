@@ -1,3 +1,4 @@
+using static GameConstants;
 using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
@@ -15,6 +16,11 @@ public class GameManager : MonoBehaviourPunCallbacks
     /// </summary>
     private Phase phase;
     public virtual Phase Phase => phase;
+
+    /// <summary>
+    /// 로컬 플레이어 오브젝트
+    /// </summary>
+    private GameObject localPlayer;
 
     [SerializeField]
     private GameObject playerPrefab;
@@ -112,10 +118,13 @@ public class GameManager : MonoBehaviourPunCallbacks
     /// </summary>
     private void SpawnPlayer()
     {
-        Vector3 spawnPosition = new(0, 0, this.playerPrefab.transform.position.z);
+        Vector3 spawnPosition = new(SpawnLocation.X, SpawnLocation.Y, this.playerPrefab.transform.position.z);
         GameObject obj = PhotonNetwork.Instantiate(this.playerPrefab.name, spawnPosition, Quaternion.identity);
-        if (obj.GetComponent<PhotonView>().IsMine)
+        if (obj.GetPhotonView().IsMine)
+        {
             Camera.main.GetComponent<CameraFollow>().target = obj.transform;
+            this.localPlayer = obj;
+        }
     }
 
     /// <summary>
@@ -190,18 +199,57 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void UpdateKeyCount(int count) => this.keyContainerHud.GetComponent<KeyCountHud>().UpdateKeyCount(count);
+    void UpdateKeyCount(int count) =>
+        this.keyContainerHud.GetComponent<KeyCountHud>().UpdateKeyCount(count);
+
+    [PunRPC]
+    void TeleportTo(float x, float y)
+    {
+        if (this.localPlayer == null)
+            return;
+
+        Vector3 prev = this.localPlayer.transform.position;
+        this.localPlayer.transform.position = new(x, y, prev.z);
+    }
+
+    [PunRPC]
+    void EnterSpectatorMode()
+    {
+        // 디스폰 처리
+        PhotonNetwork.Destroy(this.localPlayer);
+        this.localPlayer = null;
+
+        // 랜덤 플레이어 선정 후 관전 
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        if (players.Length == 0)
+            return;
+
+        GameObject random = players[Random.Range(0, players.Length)];
+        Camera.main.GetComponent<CameraFollow>().target = random.transform;
+    }
+
+    [PunRPC]
+    void ExitSpectatorMode()
+    {
+        // 관전 상태인 경우 플레이어 재생성
+        if (this.localPlayer == null)
+            this.SpawnPlayer();
+    }
 
     [PunRPC]
     void GameEnded(int raw)
     {
         GameEndState state = (GameEndState)raw;
+        float duration = GameConstants.GameResultDuration - 1;
+
         if (state == GameEndState.NotEnoughPlayers)
-            NoticeAlert.Create("인원 부족으로 인해 게임이 종료되었습니다.");
+            NoticeAlert.Create("인원 부족으로 인해 게임이 종료되었습니다.", duration);
         else if (state == GameEndState.HidersWin)
-            NoticeAlert.Create("학생들이 이겼습니다!");
-        else if (state == GameEndState.SeekersWin)
-            NoticeAlert.Create("선생님이 이겼습니다!");
+            NoticeAlert.Create("학생들이 학교를 탈출하여 승리하였습니다!", duration);
+        else if (state == GameEndState.SeekersWinTimeout)
+            NoticeAlert.Create("학생들이 학교를 탈출하지 못하였습니다!", duration);
+        else if (state == GameEndState.SeekersWinCaught)
+            NoticeAlert.Create("선생님이 모든 학생을 붙잡아 승리하였습니다!", duration);
     }
 
 #endregion

@@ -1,3 +1,5 @@
+using System.Numerics;
+
 /// <summary>
 /// 게임 공용 상수
 /// </summary>
@@ -18,26 +20,31 @@ public static class GameConstants
     /// <summary>
     /// 시작을 위해 기다리는 시간
     /// </summary>
-    public const float WaitTimeBeforeGameStart = 2; // 10f;
+    public const float WaitTimeBeforeGameStart = 10f;
 
     /// <summary>
     /// 게임 결과 시간
     /// </summary>
-    public const float GameResultDuration = 2f; // 10f;
+    public const float GameResultDuration = 5f;
 
 #endregion
 
 #region 게임 규칙
 
     /// <summary>
+    /// 플레이어 스폰 위치
+    /// </summary>
+    public static readonly Vector2 SpawnLocation = new(-5.8f, 5.8f);
+
+    /// <summary>
     /// 게임 시간
     /// </summary>
-    public const float GameDuration = 10f; // 180f;
+    public const float GameDuration = 180f;
 
     /// <summary>
     /// 역할 선정 시간
     /// </summary>
-    public const float TimeSelectRole = 8f; //160f;
+    public const float TimeSelectRole = 165f;
 
     /// <summary>
     /// 탈출을 위한 열쇠의 개수

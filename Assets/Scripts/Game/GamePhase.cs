@@ -1,3 +1,4 @@
+using static GameConstants;
 using System.Collections.Generic;
 using System.Linq;
 using Photon.Pun;
@@ -11,6 +12,7 @@ public class GamePhase : Phase
 {
 
     private bool _selectedRole;
+    private bool _endGame;
     private readonly Dictionary<int, PlayerState> _playerStates = new();
     private readonly Dictionary<PlayerState, int> _stateSizes = new();
     public readonly Dictionary<GameObject, double> spawnedItem = new();
@@ -33,9 +35,12 @@ public class GamePhase : Phase
         this.BroadcastActionBar("");
         this.SetRoomJoinable(false);
 
-        // 모든 플레이어를 도망자로 설정
+        // 모든 플레이어를 도망자로 설정 후 스폰 위치로 이동
         foreach (Player player in PhotonNetwork.PlayerList)
+        {
             this.SetToHider(player);
+            this.SendTeleport(player, SpawnLocation.X, SpawnLocation.Y);
+        }
     }
 
     public override void Terminate()
@@ -69,14 +74,18 @@ public class GamePhase : Phase
 
     public override void Tick()
     {
-        // 게임 종료
+        /* 게임 종료 */
         if (this.TimeRemaining <= 0f)
         {
+            // 시간 초과로 인한 술래의 승리
+            if (!this._endGame)
+                this.BroadcastGameEnd(GameEndState.SeekersWinTimeout);
+            // 페이즈 변경
             this.session.ChangePhase(new GameResultPhase(this.session));
             return;
         }
 
-        // 게임 틱 로직
+        /* 게임 틱 로직 */
         this.UpdateTimer(this.TimeRemaining - Time.fixedDeltaTime);
         this.SelectRole();
         this.CheckPlayerSize();
@@ -134,13 +143,14 @@ public class GamePhase : Phase
     private void CheckPlayerSize()
     {
         /* 아직 역할이 정해지지 않은 경우 */
-        if (!this._selectedRole)
+        if (!this._selectedRole || this._endGame)
             return;
 
         // 플레이어 수가 부족한 경우
         int totalPlayer = PhotonNetwork.PlayerList.Length;
         if (totalPlayer < 2)
         {
+            this._endGame = true;
             this.UpdateTimer(0);
             this.BroadcastGameEnd(GameEndState.NotEnoughPlayers);
             return;
@@ -154,14 +164,16 @@ public class GamePhase : Phase
         // 술래 수의 절반이 탈출한 경우 도망자 승리
         if (seekerSize / 2.0f <= escaperSize)
         {
+            this._endGame = true;
             this.UpdateTimer(0);
             this.BroadcastGameEnd(GameEndState.HidersWin);
         }
         // 모든 도망자가 죽은 경우
         else if (deadPlayerSize + seekerSize == totalPlayer)
         {
+            this._endGame = true;
             this.UpdateTimer(0);
-            this.BroadcastGameEnd(GameEndState.SeekersWin);
+            this.BroadcastGameEnd(GameEndState.SeekersWinCaught);
         }
     }
 
@@ -190,13 +202,18 @@ public class GamePhase : Phase
             List<Player> selected = shuffled.Take(targetSize).ToList();
 
             foreach (Player player in selected)
+            {
                 this.SetToSeeker(player);
+                this.SendTeleport(player, SpawnLocation.X, SpawnLocation.Y);
+            }
 
             // 이제 역할을 알려주자...
             foreach (Player player in currentPlayers)
             {
-                string role = this.IsSeeker(player) ? "술래" : "도망자";
-                this.SendActionBar(player, $"당신의 역할은 {role} 입니다!");
+                if (this.IsSeeker(player))
+                    this.SendActionBar(player, $"당신의 역할은 \"선생님\" 입니다!\n학생들을 붙잡아 공부시키세요!");
+                else
+                    this.SendActionBar(player, $"당신의 역할은 \"학생\" 입니다!\n열쇠 {GameConstants.KeySizeForEscape}개를 수집하여 학교를 탈출하세요!");
             }
         }
     }
@@ -223,7 +240,7 @@ public class GamePhase : Phase
         }
 
         /* 키 아이템 스폰 */
-        if (spawnedItem.Count < 10)
+        if (spawnedItem.Count < 3)
         {
             GameObject obj = this.session.SpawnItem("ItemKey");
             this.spawnedItem.Add(obj, PhotonNetwork.Time);

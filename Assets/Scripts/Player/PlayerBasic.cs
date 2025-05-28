@@ -56,8 +56,9 @@ public class PlayerBasic : MonoBehaviourPunCallbacks
             // 내 역할이 술래이고 상대가 도망자 경우
             if (game.IsSeeker(this.photonView.OwnerActorNr) && game.IsHider(otherView.OwnerActorNr))
             {
-                // TODO 플레이어 사망을 어떻게 처리할 것인가?
+                // 플레이어를 사망 처리하기
                 game.SetPlayerState(otherView.OwnerActorNr, GamePhase.PlayerState.Dead);
+                game.SendEnterSpectatorMode(otherView.OwnerActorNr);
             }
         }
 
@@ -75,11 +76,11 @@ public class PlayerBasic : MonoBehaviourPunCallbacks
         // 3. 탈출구와 충돌한 경우
         if (collision.gameObject.CompareTag("EscapeDoor"))
         {
-            // 내 역할이 도망자인 경우
-            if (game.IsHider(this.photonView.OwnerActorNr))
+            // 내 역할이 도망자인 경우 플레이어를 탈출한 것으로 처리하기
+            if (game.CanEscape() && game.IsHider(this.photonView.OwnerActorNr))
             {
-                // TODO 플레이어 탈출을 어떻게 처리할 것인가?
                 game.SetPlayerState(this.photonView.OwnerActorNr, GamePhase.PlayerState.Escaper);
+                game.SendEnterSpectatorMode(this.photonView.OwnerActorNr);
             }
         }
     }
