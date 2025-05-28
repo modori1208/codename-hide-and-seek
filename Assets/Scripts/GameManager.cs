@@ -2,6 +2,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// 게임 세션을 관리하는 스크립트
@@ -15,26 +16,22 @@ public class GameManager : MonoBehaviourPunCallbacks
     private Phase phase;
     public virtual Phase Phase => phase;
 
-    /// <summary>
-    /// 플레이어 프리팹
-    /// </summary>
     [SerializeField]
     private GameObject playerPrefab;
 
-    /// <summary>
-    /// (UI) 타이머 텍스트
-    /// </summary>
-    public TMP_Text timerText;
+    [SerializeField]
+    private GameObject keyContainerHud;
+    [SerializeField]
+    private PolygonCollider2D itemSpawnAllowArea;
+    [SerializeField]
+    private PolygonCollider2D itemSpawnForbiddenArea;
 
-    /// <summary>
-    /// (UI) 액션바 출력 시간
-    /// </summary>
-    public float actionBarDuration;
+    [SerializeField]
+    private TMP_Text timerText;
 
-    /// <summary>
-    /// (UI) 액션바
-    /// </summary>
-    public TMP_Text actionBar;
+    [SerializeField]
+    private TMP_Text actionBar;
+    private float actionBarDuration;
 
     void Start()
     {
@@ -98,6 +95,42 @@ public class GameManager : MonoBehaviourPunCallbacks
             Camera.main.GetComponent<CameraFollow>().target = obj.transform;
     }
 
+    /// <summary>
+    /// 아이템을 스폰합니다.
+    /// </summary>
+    /// <param name="prefabName">프리팹 이름</param>
+    /// <returns>스폰된 아이템 오브젝트</returns>
+    public GameObject SpawnItem(string prefabName)
+    {
+        /* 아이템 스폰 가능 위치 탐색 */
+        Vector2 spawnPoint;
+        int attempts = 0;
+
+        do
+        {
+            Bounds bounds = this.itemSpawnAllowArea.bounds;
+            spawnPoint = new Vector2(
+                Random.Range(bounds.min.x, bounds.max.x),
+                Random.Range(bounds.min.y, bounds.max.y)
+            );
+            attempts++;
+        } while (
+            // 결정된 위치가 스폰 허용 범위 안에 들어있고 비허용 범위 안에 없는 경우
+            (!this.itemSpawnAllowArea.OverlapPoint(spawnPoint) ||
+                this.itemSpawnForbiddenArea.OverlapPoint(spawnPoint))
+            // 시도 횟수가 30회를 초과하면 아이템 스폰을 포기 (...)
+            && attempts < 30
+        );
+
+        /* 아이템 스폰 시도 횟수를 넘은 경우 처리하지 않음 */
+        if (attempts >= 30)
+            return null;
+
+        /* 아이템 스폰 */
+        Vector3 spawnPointV3 = new(spawnPoint.x, spawnPoint.y, -1);
+        return PhotonNetwork.Instantiate(prefabName, spawnPointV3, Quaternion.identity);
+    }
+
     void FixedUpdate()
     {
         /* 서버 사이드 로직 */
@@ -114,6 +147,15 @@ public class GameManager : MonoBehaviourPunCallbacks
             this.actionBarDuration = 0f;
             this.actionBar.text = "";
         }
+    }
+
+    /// <summary>
+    /// 게임 나가기 버튼
+    /// </summary>
+    public void OnClickBack()
+    {
+        PhotonNetwork.Disconnect();
+        SceneManager.LoadScene("Main");
     }
 
 #region RPC 처리
@@ -134,11 +176,18 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
+    void UpdateKeyCount(int count) => this.keyContainerHud.GetComponent<KeyCountHud>().UpdateKeyCount(count);
+
+    [PunRPC]
     void GameEnded(int raw)
     {
         GameEndState state = (GameEndState)raw;
-        // TODO 게임 종료 상태를 어떻게 보여줄 것인가? GameResultPhase랑 연계
-        Debug.Log($"게임 종료: {state}");
+        if (state == GameEndState.NotEnoughPlayers)
+            NoticeAlert.Create("인원 부족으로 인해 게임이 종료되었습니다.");
+        else if (state == GameEndState.HidersWin)
+            NoticeAlert.Create("학생들이 이겼습니다!");
+        else if (state == GameEndState.SeekersWin)
+            NoticeAlert.Create("선생님이 이겼습니다!");
     }
 
 #endregion
