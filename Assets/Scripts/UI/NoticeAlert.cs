@@ -11,6 +11,13 @@ public class NoticeAlert : MonoBehaviour
 
     private GameObject alertPrefab;
 
+    /// <summary>
+    /// 알림창의 크기를 설정합니다.
+    /// </summary>
+    [SerializeField]
+    [Range(0.1f, 3f)]
+    private float scale = 1.0f;
+
     void Start()
     {
         this.alertPrefab = Resources.Load<GameObject>("Alert");
@@ -51,8 +58,11 @@ public class NoticeAlert : MonoBehaviour
         GameObject alert = Instantiate(this.alertPrefab, GameObject.Find("Canvas").transform);
         alert.SetActive(true);
 
+        Transform layout = alert.transform.GetChild(0);
+        layout.localScale = new(this.scale, this.scale, 1);
+
         // 메시지 설정
-        TMP_Text textObj = alert.transform.GetChild(0).GetComponent<TMP_Text>();
+        TMP_Text textObj = layout.GetChild(1).GetComponent<TMP_Text>();
         textObj.text = message;
 
         // 애니메이션 재생
