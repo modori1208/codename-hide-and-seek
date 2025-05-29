@@ -1,5 +1,6 @@
 using ExitGames.Client.Photon;
 using Photon.Pun;
+using TMPro;
 using UnityEngine;
 
 /// <summary>
@@ -31,7 +32,8 @@ public class PlayerBasic : MonoBehaviourPunCallbacks
     void Awake()
     {
         this.gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        this.animator = GetComponent<Animator>();
+        this.transform.GetChild(0).GetComponent<TMP_Text>().text = this.photonView.Owner.NickName;
+        this.animator = this.transform.GetChild(1).GetComponent<Animator>();
         this.animator.speed = 0f;
         this.playerMovement = GetComponent<PlayerMovement>();
     }
@@ -132,9 +134,10 @@ public class PlayerBasic : MonoBehaviourPunCallbacks
         if (this.photonView.OwnerActorNr != actorNumber)
             return;
 
-        Vector3 prevScale = this.transform.localScale;
+        Transform transform = this.transform.GetChild(1);
+        Vector3 prevScale = transform.localScale;
         float x = Mathf.Abs(prevScale.x) * (isRight ? -1 : 1);
-        this.transform.localScale = new(x, prevScale.y, prevScale.z);
+        transform.localScale = new(x, prevScale.y, prevScale.z);
     }
 
     [PunRPC]

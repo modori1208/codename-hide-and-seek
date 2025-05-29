@@ -1,4 +1,5 @@
 using Photon.Pun;
+using TMPro;
 using UnityEngine;
 
 /// <summary>
@@ -12,6 +13,9 @@ public class PhotonLauncher : MonoBehaviourPunCallbacks
     /// </summary>
     private readonly string appVersion = "1";
 
+    [SerializeField]
+    private TMP_InputField nickname;
+
     void Awake()
     {
         // 게임 프로토콜 버전 설정
@@ -23,6 +27,15 @@ public class PhotonLauncher : MonoBehaviourPunCallbacks
 
     public void StartGameConnection()
     {
+        // 빈 닉네임 확인
+        if (string.IsNullOrEmpty(this.nickname.text))
+        {
+            NoticeAlert.Create("닉네임을 입력해주세요.", 2f);
+            return;
+        }
+
+        // 서버 연결 시도
+        PhotonNetwork.NickName = this.nickname.text;
         NoticeAlert.Create("서버에 연결 중입니다...", 10f);
 
         if (PhotonNetwork.IsConnected)
