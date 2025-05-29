@@ -137,5 +137,12 @@ public class PlayerBasic : MonoBehaviourPunCallbacks
         this.transform.localScale = new(x, prevScale.y, prevScale.z);
     }
 
+    [PunRPC]
+    void UpdateMovementSpeed(int actorNumber, float speed)
+    {
+        if (this.photonView.OwnerActorNr == actorNumber)
+            this.playerMovement.SetMovementSpeed(speed);
+    }
+
 #endregion
 }

@@ -240,11 +240,18 @@ public class GamePhase : Phase
         }
 
         /* 키 아이템 스폰 */
-        if (spawnedItem.Count < 3)
+        if (spawnedItem.Count < 5)
         {
-            GameObject obj = this.session.SpawnItem("ItemKey");
-            this.spawnedItem.Add(obj, PhotonNetwork.Time);
+            this.SpawnItems0("ItemKey");
+            this.SpawnItems0("ItemDrink");
         }
+    }
+
+    private void SpawnItems0(string prefabName)
+    {
+        GameObject obj = this.session.SpawnItem(prefabName);
+        if (obj != null)
+            this.spawnedItem.Add(obj, PhotonNetwork.Time);
     }
 
 #endregion

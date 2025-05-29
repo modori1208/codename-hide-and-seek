@@ -37,6 +37,11 @@ public static class GameConstants
     public static readonly Vector2 SpawnLocation = new(-5.8f, 5.8f);
 
     /// <summary>
+    /// 플레이어 이동 속도
+    /// </summary>
+    public const float PlayerMovementSpeed = 5.0f;
+
+    /// <summary>
     /// 게임 시간
     /// </summary>
     public const float GameDuration = 180f;
