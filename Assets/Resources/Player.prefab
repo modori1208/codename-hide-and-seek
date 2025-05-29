@@ -66,8 +66,8 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Radius: 0.4
+  m_Offset: {x: 0, y: -0.03}
+  m_Radius: 0.35
 --- !u!1 &7606058919849491897
 GameObject:
   m_ObjectHideFlags: 0
@@ -151,7 +151,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 7495101881421498209, guid: eb4021e22ad8a4af99abeba59ee7fe99, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -246,8 +246,8 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: -0.19858055}
-  m_Radius: 0.20141949
+  m_Offset: {x: 0, y: -0.2}
+  m_Radius: 0.175
 --- !u!114 &2212257696351025817
 MonoBehaviour:
   m_ObjectHideFlags: 0
