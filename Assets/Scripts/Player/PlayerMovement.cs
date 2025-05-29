@@ -1,3 +1,4 @@
+using static GameConstants;
 using Photon.Pun;
 using UnityEngine;
 
@@ -16,7 +17,7 @@ public class PlayerMovement : MonoBehaviourPunCallbacks
     /// 이동 속도
     /// </summary>
     [Range(0f, 10f)]
-    private float moveSpeed = 5.0f;
+    private float moveSpeed = PlayerMovementSpeed;
 
     /// <summary>
     /// 입력으로부터 계산된 이동 벡터 (정규화된 방향)
@@ -78,7 +79,13 @@ public class PlayerMovement : MonoBehaviourPunCallbacks
     }
 
     /// <summary>
-    /// 플레이어의 움직임 속도를 조절합니다.
+    /// 플레이어의 이동 속도를 가져옵니다.
+    /// </summary>
+    /// <returns>이동 속도</returns>
+    public float GetMovementSpeed() => this.moveSpeed;
+
+    /// <summary>
+    /// 플레이어의 이동 속도를 조절합니다.
     /// </summary>
     /// <param name="speed">이동 속도 (0~10 사이의 실수)</param>
     public void SetMovementSpeed(float speed)
